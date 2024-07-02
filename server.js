@@ -3,14 +3,20 @@ const express = require("express");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 
+// Load environment variables from .env file
 dotenv.config();
+
+// Connect to the database
 connectDB();
 
 const app = express();
 
 app.use(express.json());
 
+// Routes
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/courses", require("./routes/courseRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

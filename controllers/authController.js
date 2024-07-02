@@ -25,10 +25,39 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
     res.json({ token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.updateUserProfile = async (req, res) => {
+  const { name, email, profileImage, password } = req.body;
+  try {
+    const user = await User.findById(req.user.id);
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (profileImage) user.profileImage = profileImage;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+    await user.save();
+    res.json({ message: "Profile updated successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
