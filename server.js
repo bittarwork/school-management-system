@@ -17,6 +17,11 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/courses", require("./routes/courseRoutes"));
+app.use("/api/materials", require("./routes/materialRoutes"));
+app.use("/api/messages", require("./routes/messageRoutes"));
+app.use("/api/comments", require("./routes/commentRoutes"));
+app.use("/api/exams", require("./routes/examRoutes"));
+app.use("/api/examResults", require("./routes/examResultRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
